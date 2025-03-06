@@ -3,6 +3,13 @@ uuid = "c695b8da-6728-49b9-9093-0d2c0c2f0dd9"
 authors = ["Yuki Nagai <cometscome@gmail.com>"]
 version = "1.0.0-DEV"
 
+[deps]
+Dierckx = "39dd38d3-220a-591b-8e3c-4c3a8c710a94"
+FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
+InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+
 [compat]
 julia = "1.6.7"
 
