@@ -6,7 +6,8 @@ function qmc_remove!(q::QMC)
     end
     vertex, position = generate_remove_vertex(q)
     det_ratio = calc_remove_ratio!(q, vertex, position)
-    ratio = (get_currentk(q) / get_K(q)) * det_ratio[1] * det_ratio[2]
+    ratio0 = det_ratio[1] * det_ratio[2]
+    ratio = (get_currentk(q) / get_K(q)) * ratio0
     rsign = sign(ratio)
     #println("ratio_remove: $ratio")
 
@@ -17,6 +18,7 @@ function qmc_remove!(q::QMC)
         currentk_remove1!(q)
         update_remove_N!(q, index, det_ratio)
         q.v.P[get_currentk(q)+1] += 1
+        q.v.current_logW += log(ratio0)
     end
 
     return pass, rsign

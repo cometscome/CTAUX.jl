@@ -24,6 +24,7 @@ struct QMC
 
         v = QMC_variables(count, vertices, averaged_sign, P, N, Dr, Dc, S, Scount, mkink, norb)
 
+
         return new(v, p)
     end
 end
@@ -40,10 +41,13 @@ function print_steps(istep, numsteps, averagek, averagesign, number_accept)
 end
 
 
-function run_ctaux!(q::QMC, numsteps; measurements=true)
+function run_ctaux!(q::QMC, numsteps; measurements=true, recordconfig=false, recordinterval=10000, datafilename="config.txt")
     number_accept = 0
     averagesign = 0.0
     averagek = 0.0
+    if recordconfig
+        fp = open(datafilename, "w")
+    end
 
     for istep = 1:numsteps
         pass, rsign = update!(q)
@@ -57,6 +61,21 @@ function run_ctaux!(q::QMC, numsteps; measurements=true)
             calc_S!(q)
         end
 
+        if recordconfig && (istep % recordinterval) == 1
+            vertices = get_verticesinfo(q)
+            logW = q.v.current_logW
+            numk = length(vertices)
+            print(fp, logW, "\t", numk, "\t")
+            for i = 1:numk
+                print(fp, vertices[i][1], "\t", vertices[i][2], "\t")
+            end
+            println(fp, "\t")
+        end
+
+    end
+
+    if recordconfig
+        close(fp)
     end
 
     if measurements

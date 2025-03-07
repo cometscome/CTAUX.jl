@@ -2,7 +2,9 @@ function qmc_insert!(q::QMC)
     vertex, position = generate_insert_vertex(q)
     det_ratio = calc_insert_ratio!(q, vertex)
     #println(det_ratio)
-    ratio = det_ratio[1] * det_ratio[2] * get_K(q) / (get_currentk(q) + 1)
+    #ratio = det_ratio[1] * det_ratio[2] * get_K(q) / (get_currentk(q) + 1)
+    ratio0 = det_ratio[1] * det_ratio[2]
+    ratio = ratio0 * get_K(q) / (get_currentk(q) + 1)
 
     #println("det_ratioup and down","$det_ratio")
     rsign = sign(ratio)
@@ -15,6 +17,7 @@ function qmc_insert!(q::QMC)
         update_insert_N!(q, position, det_ratio)
 
         q.v.P[get_currentk(q)+1] += 1
+        q.v.current_logW += log(ratio0)
 
     end
 

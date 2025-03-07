@@ -49,6 +49,7 @@ mutable struct QMC_variables
     g0l_temp::Matrix{Float64}
     ntemp_temp::Matrix{Float64}
     Mkl_temp::Vector{Float64}
+    current_logW::Float64
 
 
     function QMC_variables(count, vertices, averaged_sign, P, N, Dr, Dc, S, Scount, mkink, norbs)
@@ -59,7 +60,11 @@ mutable struct QMC_variables
         g0l_temp = zeros(Float64, mkink, norbs)
         ntemp_temp = zeros(Float64, mkink, mkink)
         Mkl_temp = zeros(norbs)
-        return new(count, vertices, averaged_sign, P, N, Dr, Dc, S, Scount, R_temp, L_temp, Mklm_temp, ev_temp, g0l_temp, ntemp_temp, Mkl_temp)
+        current_logW = 0
+        return new(count, vertices, averaged_sign, P, N, Dr, Dc, S, Scount,
+            R_temp, L_temp, Mklm_temp, ev_temp,
+            g0l_temp, ntemp_temp, Mkl_temp,
+            current_logW)
     end
 end
 
