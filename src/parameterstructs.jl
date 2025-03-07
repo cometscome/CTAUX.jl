@@ -14,6 +14,11 @@ struct Greenfunction
     spl::Dierckx.Spline1D
 end
 
+function (g::Greenfunction)(x)
+    return g.spl(x)
+end
+
+
 
 
 mutable struct QMC_variables
@@ -62,9 +67,25 @@ struct QMC_parameters
     delta::Array{ComplexF64,3}
     gtau0::Array{Greenfunction,1}
 
+
+    function QMC_parameters(beta, U, K, mu, V; ntime=1024, mfreq=1024, L=1, norb=2)
+
+        gamma0 = acosh(1.0 + (beta * U) / (2.0 * K))
+        expgamma0 = (exp(gamma0), exp(-gamma0))
+        mesh_tau = calc_linear_mesh(0, beta, ntime)
+        mesh_omega = calc_linear_mesh(π / beta, (π / beta) * (2mfreq - 1.0), mfreq)
+        Ef = -mu
+
+        delta = make_hybridization(mesh_omega, V, norb)
+
+        Gf0_omega = make_Gf0_omega(mesh_omega, norb, Ef, delta, U)
+
+        Gf0_tau = make_Gf0_tau(Gf0_omega, mesh_omega, ntime, beta)
+        Gf0_tau = -Gf0_tau
+
+        gtau0 = set_greenfunctions(Gf0_tau, mesh_tau)
+
+        return new(ntime, mfreq, mu, K, U, beta, mesh_tau, mesh_omega, L, norb, expgamma0, delta, gtau0)
+    end
 end
 
-struct QMC
-    v::QMC_variables
-    p::QMC_parameters
-end
