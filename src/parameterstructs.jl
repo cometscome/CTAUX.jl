@@ -87,6 +87,7 @@ struct QMC_parameters
     function QMC_parameters(beta, U, K, mu, V; ntime=1024, mfreq=1024, L=1, norb=2)
 
         gamma0 = acosh(1.0 + (beta * U) / (2.0 * K))
+        println("gamma = $gamma0")
         expgamma0 = (exp(gamma0), exp(-gamma0))
         mesh_tau = calc_linear_mesh(0, beta, ntime)
         mesh_omega = calc_linear_mesh(π / beta, (π / beta) * (2mfreq - 1.0), mfreq)
