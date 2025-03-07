@@ -8,6 +8,7 @@ See, E. Gull et al., EPL 82, 57003 (2008)
 
 
 ```julia
+using CTAUX
 function test()
     beta = 10.0
     U = 2.0
