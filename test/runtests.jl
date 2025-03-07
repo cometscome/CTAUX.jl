@@ -17,6 +17,8 @@ function test()
     mqs = 1000000
     run_ctaux!(system, nthermal, measurements=false)
     run_ctaux!(system, mqs, measurements=true)
+    vertices = get_verticesinfo(system)
+    display(vertices)
 
     println("Calculating Green's function...")
     Gτ = calc_green(system)

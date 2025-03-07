@@ -1,6 +1,6 @@
 struct Vertex
     tau::Float64
-    spin::Float64
+    spin::Int64#Float64
 end
 
 mutable struct Vertices
@@ -18,6 +18,17 @@ function (g::Greenfunction)(x)
     return g.spl(x)
 end
 
+
+function get_verticesinfo(v::Vertices)
+    taus = Tuple{Float64,Int64}[]
+    for i = 1:v.currentk
+        index = v.indices[i]
+        spin = v.values[index].spin
+        tau = v.values[index].tau
+        push!(taus, (tau, spin))
+    end
+    return taus
+end
 
 
 

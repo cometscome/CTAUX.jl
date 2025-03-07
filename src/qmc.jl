@@ -75,6 +75,11 @@ function run_ctaux!(q::QMC, numsteps; measurements=true)
 end
 export run_ctaux!
 
+function get_verticesinfo(q::QMC)
+    return get_verticesinfo(q.v.vertices)
+end
+export get_verticesinfo
+
 function update!(q::QMC)
     r = rand()
     #println(r)
