@@ -5,7 +5,13 @@ See, E. Gull et al., EPL 82, 57003 (2008)
 
 [![Build Status](https://github.com/cometscome/CTAUX.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/cometscome/CTAUX.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
+# install
 
+```
+add https://github.com/cometscome/CTAUX.jl 
+```
+
+# example
 
 ```julia
 using CTAUX
