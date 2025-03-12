@@ -19,6 +19,9 @@ function qmc_remove!(q::QMC)
         update_remove_N!(q, index, det_ratio)
         q.v.P[get_currentk(q)+1] += 1
         q.v.current_logW += log(ratio0)
+
+        #logdetW = calc_logdet!(q)
+        #println("remove: ", logdetW - q.v.current_logW)
     end
 
     return pass, rsign
@@ -54,6 +57,7 @@ function update_remove_N!(q::QMC, index, rspin, det_ratio)
     updateN_direct!(q, ntemp, rspin)
     return
 end
+
 
 function calc_remove_ratio!(q, vertex, position)
     index = get_indices(q)[position]

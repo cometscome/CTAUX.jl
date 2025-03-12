@@ -474,3 +474,71 @@ function remove_vertex!(v::Vertices, tau, spin, x, position)
 end
 
 
+function calc_DσΓσ(q::QMC, ispin)
+    k = get_currentk(q)
+    Dσ = zeros(k, k)
+    Γσ = zeros(k, k)
+    Ninv = calc_Ninv(q, ispin)
+    for i = 1:k
+        Dσ[i, i] = Ninv[i, i]
+        for j = 1:k
+            if i != j
+                Γσ[j, i] = -Ninv[j, i]
+            end
+        end
+    end
+    return Dσ, Γσ
+end
+
+function calc_logdet!(q::QMC)
+    ispin = 1
+    detw_up = calc_logdet(q, ispin)
+    ispin = 2
+    detw_down = calc_logdet(q, ispin)
+    logdetW = log(detw_up * detw_down)
+    return logdetW
+end
+
+function calc_logdet(q::QMC, ispin)
+    Ninv = calc_Ninv(q, ispin)
+    return det(Ninv)
+end
+
+
+function calc_Ninv(q::QMC, ispin)
+    k = get_currentk(q)
+    ssign = (-1)^(ispin - 1)
+    exp_v = zeros(Float64, k)
+    indices = get_indices(q)
+    for j = 1:k
+        vertex_j = get_timeordered_vertex(q, j)
+        s_j = vertex_j.spin
+        exp_v[indices[j]] = ifelse(ssign * s_j == 1, get_expgamma0(q, 1), get_expgamma0(q, 2))
+    end
+    Gmm = zeros(k, k)
+    Ninv = zeros(k, k)
+
+    for j = 1:k
+        jj = get_indices(q)[j]
+        tau_j = get_timeordered_vertex(q, j).tau
+        for i = 1:k
+            ii = get_indices(q)[i]
+            tau_i = get_timeordered_vertex(q, i).tau
+            #dtau = tau_i - tau_j
+            Gmm[ii, jj] = calc_Gf0_tau(q, tau_i, tau_j, ispin)
+        end
+    end
+
+    for j = 1:k
+        #tau_j = get_timeordered_vertex(q, j).tau
+        #tau_j = get_timeordered_vertex(q, j).tau
+        for i = 1:k
+            #tau_i = get_timeordered_vertex(q, i).tau
+            if i == j
+                Ninv[i, j] += exp_v[i]
+            end
+            Ninv[i, j] += -Gmm[i, j] * (exp_v[j] - 1)
+        end
+    end
+    return Ninv
+end
